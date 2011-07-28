@@ -180,6 +180,13 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 					$aMarkerArray['###ACTUS###']=$sActus;
 					$aMarkerArray['###ACTUS_LABEL###']=($aMarkerArray['###ACTUS###']!='')?'<h2><span>'.$this->pi_getLL('actus_label').'</span></h2>':'';
 					
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'])) {
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'] as $_classRef) {
+							$_procObj = & t3lib_div::getUserObj($_classRef);
+							$_procObj->additionalNoticeSingleFields($aMarkerArray, $aNotice, $this->conf, $this);
+						}
+					}
+		
 					$sContent.= $this->viewTemplate('###TEMPLATE_DETAIL###',$aMarkerArray);
 				}
 			}
@@ -342,6 +349,14 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 					$aMarkerArray['###ICON_SOURCE###']=$sLogo;
 					$aMarkerArray['###DATE###']=strftime($this->conf['dateFormat'],$aNotice['date']);
 					$aMarkerArray['###VEILLE###']=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?'':$sLesVeilles;
+					
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'])) {
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'] as $_classRef) {
+							$_procObj = & t3lib_div::getUserObj($_classRef);
+							$_procObj->additionalNoticeSingleFields($aMarkerArray, $aNotice, $this->conf, $this);
+						}
+					}
+					
 					$sListe.= $this->viewTemplate('###TEMPLATE_ITEM###',$aMarkerArray);
 				}
 			}
@@ -351,6 +366,14 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 				$aMarkerArray['###VEILLE_SELECT###']=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?'':$sVeilleSelect;
 				$aMarkerArray['###NAV_PAGES###']=$sPagesLinks;
 				$aMarkerArray['###LISTE###']=$sListe;
+				
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalListFields'])) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalListFields'] as $_classRef) {
+					$_procObj = & t3lib_div::getUserObj($_classRef);
+					$_procObj->additionalListFields($aMarkerArray, $this->conf, $this);
+				}
+			}
+					
 			$sContent.= $this->viewTemplate('###TEMPLATE_LIST###',$aMarkerArray);
 		}
 		return $this->pi_wrapInBaseClass($sContent);
@@ -380,6 +403,13 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 		$this->template = $this->getTemplateFile('');
 		//echo $this->template;
 		$this->incCssFile(t3lib_extMgm::siteRelPath($this->extKey) . 'res/css/default.css');
+		
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['initConfiguration'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['initConfiguration'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->initConfiguration($this->conf, $this);
+			}
+		}
 	}
 	/**
 	 * Get subpart of template and replace values with markers array
@@ -391,6 +421,14 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 	function viewTemplate($nametemplate, $markers){
 		$cObj = t3lib_div::makeInstance('tslib_cObj');
 		$cObj->setParent($this->cObj->data,$this->cObj->currentRecord);
+		
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalTemplateFields'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalTemplateFields'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->additionalTemplateFields($nametemplate, $markers, $this->conf, $this);
+			}
+		}
+			
 		$templatename = basename($this->template);
         $sContent = $cObj->getSubpart(file_get_contents($this->template), $nametemplate);
 		$sContent = $cObj->substituteMarkerArray($sContent, $markers);
