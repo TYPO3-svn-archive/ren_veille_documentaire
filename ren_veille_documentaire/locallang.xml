@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for extension 'ren_veille_documentaire'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="pi1_title">Documents Watching display</label>
+			<label index="pi1_plus_wiz_description">Display Documents notices</label>
+			<label index="pi2_title">tt_news related documents display</label>
+			<label index="pi2_plus_wiz_description">Display Documents notices linked to a news</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="pi1_title">Affichage de la Veille documentaire</label>
+			<label index="pi1_plus_wiz_description">Affiche les notices de la veille documentaire</label>
+			<label index="pi2_title">Affichage des notices liées à l'actualité</label>
+			<label index="pi2_plus_wiz_description">Affichage des notices de documents liées à une actualité</label>
+		</languageKey>
+	</data>
+</T3locallang>

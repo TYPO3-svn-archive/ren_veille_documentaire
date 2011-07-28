@@ -1,0 +1,21 @@
+plugin.tx_renveilledocumentaire_pi1{
+	templatePath = {$config.tx_renveilledocumentaire_pi1.templatePath}
+	defaultTemplate = {$config.tx_renveilledocumentaire_pi1.defaultTemplate}
+	template = {$config.tx_renveilledocumentaire_pi1.template}
+	dateFormat = {$config.tx_renveilledocumentaire_pi1.dateFormat}
+	
+	icon = IMG_RESOURCE
+	icon {
+		file{
+			maxW=40
+			maxH=25
+		}
+	 }
+}
+
+plugin.tx_renveilledocumentaire_pi2{
+	templatePath = {$config.tx_renveilledocumentaire_pi1.templatePath}
+	defaultTemplate = {$config.tx_renveilledocumentaire_pi1.defaultTemplate}
+	template = {$config.tx_renveilledocumentaire_pi1.template}
+	dateFormat = {$config.tx_renveilledocumentaire_pi1.dateFormat}
+}

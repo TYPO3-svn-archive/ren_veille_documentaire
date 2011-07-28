@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin &quot;tx_renveilledocumentaire_pi2&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="veille_label">Veille(s) : </label>
+			<label index="date_label">Date : </label>
+			<label index="titre">Related documents</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="veille_label">Veille(s) : </label>
+			<label index="titre">Dans la presse</label>
+		</languageKey>
+	</data>
+</T3locallang>

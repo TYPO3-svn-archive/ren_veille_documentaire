@@ -1,0 +1,11 @@
+config.tx_renveilledocumentaire_pi1 {
+	templatePath = EXT:ren_veille_documentaire/res/
+	# cat=plugin.tx_renveilledocumentaire_pi1/other/b; type=string; label=Default template: The default template file to use.
+	defaultTemplate = template.html
+	# cat=plugin.tx_renveilledocumentaire_pi1/file/a; type=file[html]; label=Template to use: The template file to use.
+	template = 
+	# cat=plugin.tx_renveilledocumentaire_pi1/other/b; type=string; label=Date Format
+	dateFormat = %e/%m/%Y
+	# cat=plugin.tx_renveilledocumentaire_pi1/other/b; type=int; label=Repertoire de stockage des statistiques d acces aux fichiers
+	statsPid = 
+}

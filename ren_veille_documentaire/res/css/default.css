@@ -1,0 +1,37 @@
+div.tx-renveilledocumentaire-pi1 div.haut{
+	width: 100%;
+	float: left;
+	clear: both;
+}
+
+div.tx-renveilledocumentaire-pi1 div.bas{
+	width: 100%;
+	float: left;
+	clear: both;
+}
+
+div.tx-renveilledocumentaire-pi1 ul.tx_renveilledocumentaire_pi1_navpages{
+	clear: both;
+	float: right;
+	margin: 0;
+	padding: 0;
+}
+
+div.tx-renveilledocumentaire-pi1 ul.tx_renveilledocumentaire_pi1_navpages li,#page div.tx-renveilledocumentaire-pi1 ul.tx_renveilledocumentaire_pi1_navpages li{
+	margin: 0;
+	padding: 0;
+        clear: none;
+	float: left;
+	background: none;
+	list-style: none;
+}
+
+div.tx-renveilledocumentaire-pi1 ul.tx_renveilledocumentaire_pi1_navpages li a{
+	float: left;
+	margin: 0 0.1em 0 0.1em;
+	text-decoration: none;
+}
+
+div.tx-renveilledocumentaire-pi1 ul.tx_renveilledocumentaire_pi1_navpages li.courant a{
+	font-weight: bold;
+}

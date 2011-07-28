@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'ren_veille_documentaire'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_renveilledocumentaire_sources">Document's Source</label>
+			<label index="tx_renveilledocumentaire_sources.nom">Name</label>
+			<label index="tx_renveilledocumentaire_sources.icon">Icon</label>
+			<label index="tx_renveilledocumentaire_keywords">Document's Keyword</label>
+			<label index="tx_renveilledocumentaire_keywords.word">Word:</label>
+			<label index="tx_renveilledocumentaire_keywords.generic">Generic words:</label>
+			<label index="tx_renveilledocumentaire_keywords.specific">Specific words:</label>
+			<label index="tx_renveilledocumentaire_keywords.associated">Associated words:</label>
+			<label index="tx_renveilledocumentaire_keywords.synonym">Synonym:</label>
+			<label index="tx_renveilledocumentaire_auteurs">Document's Author</label>
+			<label index="tx_renveilledocumentaire_auteurs.nom">Name</label>
+			<label index="tx_renveilledocumentaire_veilles">Document watching</label>
+			<label index="tx_renveilledocumentaire_veilles.titre">Title</label>
+			<label index="tx_renveilledocumentaire_veilles.descriptif">Description</label>
+			<label index="tx_renveilledocumentaire_notices">Document's Note</label>
+			<label index="tx_renveilledocumentaire_notices.titre">Title</label>
+			<label index="tx_renveilledocumentaire_notices.source">Source</label>
+			<label index="tx_renveilledocumentaire_notices.date">Date</label>
+			<label index="tx_renveilledocumentaire_notices.resume">Summary</label>
+			<label index="tx_renveilledocumentaire_notices.mots_cles">Keywords</label>
+			<label index="tx_renveilledocumentaire_notices.auteurs">Authors</label>
+			<label index="tx_renveilledocumentaire_notices.fichiers">Files</label>
+			<label index="tx_renveilledocumentaire_notices.url">URL</label>
+			<label index="tx_renveilledocumentaire_notices.voir_aussi">See also</label>
+			<label index="tx_renveilledocumentaire_notices.actus">Related News</label>
+			<label index="tx_renveilledocumentaire_notices.veille">Watching</label>
+			<label index="tx_renveilledocumentaire_news.notices">related documents</label>
+			<label index="tx_renveilledocumentaire_fichiers_stats">Document's File Statistic</label>
+			<label index="tx_renveilledocumentaire_fichiers_stats.fichier">File</label>
+			<label index="tt_content.list_type_pi1">Documents Watching display</label>
+			<label index="tt_content.list_type_pi2">tt_news related documents display</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="tx_renveilledocumentaire_sources">Source documentaire</label>
+			<label index="tx_renveilledocumentaire_sources.nom">Nom</label>
+			<label index="tx_renveilledocumentaire_sources.icon">Icone</label>
+			<label index="tx_renveilledocumentaire_keywords">Mot clef (Veille documentaire)</label>
+			<label index="tx_renveilledocumentaire_keywords.word">Terme :</label>
+			<label index="tx_renveilledocumentaire_keywords.generic">Termes génériques :</label>
+			<label index="tx_renveilledocumentaire_keywords.specific">Termes spécifiques :</label>
+			<label index="tx_renveilledocumentaire_keywords.associated">Termes associés :</label>
+			<label index="tx_renveilledocumentaire_keywords.synonym">Synonyme :</label>
+			<label index="tx_renveilledocumentaire_auteurs">Auteur de document</label>
+			<label index="tx_renveilledocumentaire_auteurs.nom">Nom</label>
+			<label index="tx_renveilledocumentaire_veilles">Veille documentaire</label>
+			<label index="tx_renveilledocumentaire_veilles.titre">Titre</label>
+			<label index="tx_renveilledocumentaire_veilles.descriptif">Descriptif</label>
+			<label index="tx_renveilledocumentaire_notices">Notice (Veille documentaire)</label>
+			<label index="tx_renveilledocumentaire_notices.titre">Titre</label>
+			<label index="tx_renveilledocumentaire_notices.source">Source</label>
+			<label index="tx_renveilledocumentaire_notices.date">Date</label>
+			<label index="tx_renveilledocumentaire_notices.resume">Résumé</label>
+			<label index="tx_renveilledocumentaire_notices.mots_cles">Mots clés</label>
+			<label index="tx_renveilledocumentaire_notices.auteurs">Auteurs</label>
+			<label index="tx_renveilledocumentaire_notices.fichiers">Fichiers</label>
+			<label index="tx_renveilledocumentaire_notices.url">URL</label>
+			<label index="tx_renveilledocumentaire_notices.voir_aussi">Voir aussi</label>
+			<label index="tx_renveilledocumentaire_notices.actus">Actus en rapport</label>
+			<label index="tx_renveilledocumentaire_notices.veille">Veille thématique</label>
+			<label index="tx_renveilledocumentaire_news.notices">Notices liées</label>
+			<label index="tx_renveilledocumentaire_fichiers_stats">Statistique d'accès (Veille documentaire)</label>
+			<label index="tx_renveilledocumentaire_fichiers_stats.fichier">Fichier</label>
+			<label index="tt_content.list_type_pi1">Affichage de la Veille documentaire</label>
+			<label index="tt_content.list_type_pi2">Affichage des notices liées à l'actualité</label>
+		</languageKey>
+	</data>
+</T3locallang>

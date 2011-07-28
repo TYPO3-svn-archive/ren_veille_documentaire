@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin &quot;tx_renveilledocumentaire_pi1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="veille_label">Veille(s) : </label>
+			<label index="source_label">Source(s) : </label>
+			<label index="mots_cles_label">Mots clés : </label>
+			<label index="date_label">Date : </label>
+			<label index="auteurs_label">Aueurs : </label>
+			<label index="resume_label">Résumé : </label>
+			<label index="fichiers_label">Fichier(s) : </label>
+			<label index="url_label">Site internet : </label>
+			<label index="voir_aussi_label">Voir aussi : </label>
+			<label index="actus_label">Actualités liées : </label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="veille_label">Veille(s) : </label>
+			<label index="source_label">Source(s) : </label>
+			<label index="mots_cles_label">Mots clés : </label>
+			<label index="date_label">Date : </label>
+			<label index="auteurs_label">Aueurs : </label>
+			<label index="resume_label">Résumé : </label>
+			<label index="fichiers_label">Fichier(s) : </label>
+			<label index="url_label">Site internet : </label>
+			<label index="voir_aussi_label">Voir aussi : </label>
+			<label index="actus_label">Actualités liées : </label>
+		</languageKey>
+	</data>
+</T3locallang>

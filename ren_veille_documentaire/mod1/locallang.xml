@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txrenveilledocumentaireM1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">Veille documentaire</label>
+			<label index="function1">Recherche</label>
+			<label index="function2">Statistiques</label>
+			<label index="close">Close</label>
+			<label index="save">Save</label>
+			<label index="available_documents">Available Documents</label>
+			<label index="create_new_record">Create a new record</label>
+			<label index="actions">Actions</label>
+			<label index="edit_cat">Edit record</label>
+			<label index="no_type">There is no type to display</label>
+			<label index="no_document">Pas de notices</label>
+			<label index="associated_cat">Associated Category</label>
+			<label index="titre">Titre</label>
+			<label index="auteur">Auteur</label>
+			<label index="yes">Oui</label>
+			<label index="no">Non</label>
+			<label index="applyfilter">Filtrer</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="title">Veille documentaire</label>
+		</languageKey>
+	</data>
+</T3locallang>
