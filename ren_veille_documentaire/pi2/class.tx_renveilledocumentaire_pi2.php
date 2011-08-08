@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 In Cité <contact@in-cite.net>
+*  (c) 2010 In Cité Solution <technique@in-cite.net>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,7 +33,7 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
 /**
  * Plugin 'Documents Watching display' for the 'ren_veille_documentaire' extension.
  *
- * @author	In Cité <contact@in-cite.net>
+ * @author Mickael PAILLARD <mickael@in-cite.net>
  * @package	TYPO3
  * @subpackage	tx_renveilledocumentaire
  */
@@ -278,4 +278,3 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_vei
 }
 
 ?>
-

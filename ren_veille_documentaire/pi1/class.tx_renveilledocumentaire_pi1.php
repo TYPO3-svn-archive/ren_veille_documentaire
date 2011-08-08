@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 In Cité <contact@in-cite.net>
+*  (c) 2010 In Cité Solution <technique@in-cite.net>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,7 +33,7 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
 /**
  * Plugin 'Documents Watching display' for the 'ren_veille_documentaire' extension.
  *
- * @author	In Cité <contact@in-cite.net>
+ * @author Mickael PAILLARD <mickael@in-cite.net>
  * @package	TYPO3
  * @subpackage	tx_renveilledocumentaire
  */
@@ -62,8 +62,9 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 		$this->aTables['auteurs']='tx_renveilledocumentaire_auteurs';
 		$this->aTables['mots_cles']='tx_renveilledocumentaire_keywords';
 		$sContent='';
+			
 		if((isset($this->piVars['notice']))&&(($this->piVars['notice'])>0)&&(($this->conf['pagedetail']=='')||(!isset($this->conf['pagedetail'])))){
-			$aNotices=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('veille,source,resume,auteurs,mots_cles,fichiers,url,voir_aussi,actus,titre,date', $this->aTables['notices'], 'uid='.$this->piVars['notice'].$this->cObj->enableFields($this->aTables['notices']));
+			$aNotices=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,veille,source,resume,auteurs,mots_cles,fichiers,url,voir_aussi,actus,titre,date', $this->aTables['notices'], 'uid='.$this->piVars['notice'].$this->cObj->enableFields($this->aTables['notices']));
 			if (is_array($aNotices)){
 				foreach($aNotices as $iKey=>$aNotice){
 					$sLesVeilles='';
@@ -199,6 +200,7 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 				$aVeillesAffichees=array();
 				$aVeilles=explode(',',$this->conf['veilles']);
 				$aVeillesAffichees=($iPiVarsVeille>0) ? array(0=>$iPiVarsVeille):$aVeilles;
+		
 				if(is_array($aVeillesAffichees)){
 				foreach ($aVeillesAffichees as $iKey=>$iVeilleUid){
 					$sOp=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?' AND ':' OR ';
@@ -268,7 +270,7 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 					}
 				}
 				
-				if($this->conf['nbnoticepage']>0){
+				if($this->conf['nbnoticepage']>0){	
 					$rCount = $GLOBALS['TYPO3_DB']->exec_SELECTquery('COUNT(uid)', $this->aTables['notices'], $sWhere.$this->cObj->enableFields($this->aTables['notices']));
 					$iCount=0;
 					if($aCount= $GLOBALS['TYPO3_DB']->sql_fetch_assoc($rCount)){
@@ -296,6 +298,7 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 					$iNbPages  = ceil($iCount/$this->conf['nbnoticepage']);
 				}
 			}
+			
 			//$sContent.=t3lib_div::view_array($this->conf);
 			$sPagesLinks='';
 			if($iNbPages>1){
@@ -314,7 +317,7 @@ class tx_renveilledocumentaire_pi1 extends tslib_pibase {
 				}
 				$sPagesLinks='<ul class="'.$this->prefixId.'_navpages">'.$sPagesLinks.'</ul>';
 			}
-		
+			
 			$sListe='';
 			$sSelect = 'tx_renveilledocumentaire_notices.veille,tx_renveilledocumentaire_notices.uid,tx_renveilledocumentaire_notices.titre,tx_renveilledocumentaire_notices.date, tx_renveilledocumentaire_sources.icon';
 			$sFrom = $this->aTables['notices'].' INNER JOIN tx_renveilledocumentaire_sources ON tx_renveilledocumentaire_notices.source = tx_renveilledocumentaire_sources.uid';
