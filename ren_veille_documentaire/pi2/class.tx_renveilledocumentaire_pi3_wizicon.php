@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2010 In Cité <contact@in-cite.net>
+*  (c) 2011 In Cité Solution <contact@in-cite.net>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,11 +33,11 @@
 /**
  * Class that adds the wizard icon.
  *
- * @author	In Cité <contact@in-cite.net>
+ * @author	In Cité Solution <contact@in-cite.net>
  * @package	TYPO3
  * @subpackage	tx_renveilledocumentaire
  */
-class tx_renveilledocumentaire_pi2_wizicon {
+class tx_renveilledocumentaire_pi3_wizicon {
 
 					/**
 					 * Processing the wizard items array
@@ -50,11 +50,11 @@ class tx_renveilledocumentaire_pi2_wizicon {
 
 						$LL = $this->includeLocalLang();
 
-						$wizardItems['plugins_tx_renveilledocumentaire_pi2'] = array(
-							'icon'=>t3lib_extMgm::extRelPath('ren_veille_documentaire').'pi2/ce_wiz.gif',
-							'title'=>$LANG->getLLL('pi2_title',$LL),
-							'description'=>$LANG->getLLL('pi2_plus_wiz_description',$LL),
-							'params'=>'&defVals[tt_content][CType]=list&defVals[tt_content][list_type]=ren_veille_documentaire_pi2'
+						$wizardItems['plugins_tx_renveilledocumentaire_pi3'] = array(
+							'icon'=>t3lib_extMgm::extRelPath('ren_veille_documentaire').'pi3/ce_wiz.gif',
+							'title'=>$LANG->getLLL('pi3_title',$LL),
+							'description'=>$LANG->getLLL('pi3_plus_wiz_description',$LL),
+							'params'=>'&defVals[tt_content][CType]=list&defVals[tt_content][list_type]=ren_veille_documentaire_pi3'
 						);
 
 						return $wizardItems;
@@ -75,8 +75,8 @@ class tx_renveilledocumentaire_pi2_wizicon {
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_veille_documentaire/pi2/class.tx_renveilledocumentaire_pi2_wizicon.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_veille_documentaire/pi2/class.tx_renveilledocumentaire_pi2_wizicon.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_veille_documentaire/pi3/class.tx_renveilledocumentaire_pi3_wizicon.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_veille_documentaire/pi3/class.tx_renveilledocumentaire_pi3_wizicon.php']);
 }
 
 ?>
