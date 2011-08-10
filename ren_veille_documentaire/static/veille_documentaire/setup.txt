@@ -19,3 +19,10 @@ plugin.tx_renveilledocumentaire_pi2{
 	template = {$config.tx_renveilledocumentaire_pi1.template}
 	dateFormat = {$config.tx_renveilledocumentaire_pi1.dateFormat}
 }
+
+plugin.tx_renveilledocumentaire_pi3{
+	templatePath = {$config.tx_renveilledocumentaire_pi1.templatePath}
+	defaultTemplate = {$config.tx_renveilledocumentaire_pi1.defaultTemplate}
+	template = {$config.tx_renveilledocumentaire_pi1.template}
+	dateFormat = {$config.tx_renveilledocumentaire_pi1.dateFormat}
+}

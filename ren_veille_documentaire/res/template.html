@@ -1,3 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Group files example template</title>
+</head>
+<body>
+
+<h1>Templates</h1>
+
+<h2>List template</h2>
+
 <!-- ###TEMPLATE_LIST### begin -->
 	<div class="haut">###VEILLE_SELECT###	###NAV_PAGES###</div>
 	###LISTE###
@@ -8,6 +19,8 @@
 <!-- ###TEMPLATE_ITEM### begin -->
 	<li><span class="img">###ICON_SOURCE###</span><span class="infos"><span class="titre">###TITRE###</span> <span class="date">###DATE###</span></span></li>
 <!-- ###TEMPLATE_ITEM### end -->
+
+<h2>List news template</h2>
 
 <!-- ###TEMPLATE_TTNEWS_LIST### begin -->
 	###LISTE###
@@ -37,3 +50,17 @@
 		###ACTUS_LABEL###
 		###ACTUS###
 	</div>-->
+	
+
+<h2>Menu template</h2>
+
+<!-- ###TEMPLATE_MENU### begin -->
+<div class="menu_veille">
+	<h3>###TITLE###</h3>
+	<!-- ###TEMPLATE_MENU_NOTEMPTY### begin -->
+	<ul><!-- ###TEMPLATE_MENU_ITEM### begin -->
+		<li><a href="###URL###">###NAME###</a> ###DESCRIPTION###</li><!-- ###TEMPLATE_MENU_ITEM### end -->
+	</ul>
+	<!-- ###TEMPLATE_MENU_NOTEMPTY### end -->
+</div>	
+<!-- ###TEMPLATE_MENU### end -->

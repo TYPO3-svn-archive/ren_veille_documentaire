@@ -37,6 +37,18 @@
 			<label index="tx_renveilledocumentaire_fichiers_stats.fichier">File</label>
 			<label index="tt_content.list_type_pi1">Documents Watching display</label>
 			<label index="tt_content.list_type_pi2">tt_news related documents display</label>
+			<label index="tt_content.list_type_pi3">Documents Watching Menu</label>
+			<label index="flexform.pi1.configuration">Configuration</label>
+			<label index="flexform.pi1.detailsveille">Page de détails d'une veille</label>
+			<label index="flexform.pi1.detailsnotice">Page de détail d'une notice</label>
+			<label index="flexform.pi1.maxnotice">Nombre de notices maximum à afficher</label>
+			<label index="flexform.pi1.nbnoticepage">Nombre de notices à afficher par page</label>
+			<label index="flexform.pi1.pagenews">Page d'affichage des actualités liées</label>
+			<label index="flexform.pi1.template">template</label>
+			<label index="flexform.pi1.dateFormat">Format de date</label>
+			<label index="flexform.pi1.selection">Sélection</label>
+			<label index="flexform.pi1.veilles">Veilles documentaire</label>
+			<label index="flexform.pi1.operateur">opérateur</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="tx_renveilledocumentaire_sources">Source documentaire</label>
@@ -70,6 +82,7 @@
 			<label index="tx_renveilledocumentaire_fichiers_stats.fichier">Fichier</label>
 			<label index="tt_content.list_type_pi1">Affichage de la Veille documentaire</label>
 			<label index="tt_content.list_type_pi2">Affichage des notices liées à l'actualité</label>
+			<label index="tt_content.list_type_pi3">Menu des veilles documentaires</label>
 		</languageKey>
 	</data>
 </T3locallang>
