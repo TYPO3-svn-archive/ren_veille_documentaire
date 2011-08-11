@@ -53,6 +53,7 @@
 			<label index="flexform.pi1.sorting.0">ordre alphabétique</label>
 			<label index="flexform.pi1.sorting.1">date</label>
 			<label index="flexform.pi1.sorting.2">tri manuel</label>
+			<label index="flexform.pi1.resumecrop">Nombre maximal de caracère pour le résumé (crop)</label>
 			<label index="flexform.pi3.limit">Limite</label>
 		</languageKey>
 		<languageKey index="fr" type="array">

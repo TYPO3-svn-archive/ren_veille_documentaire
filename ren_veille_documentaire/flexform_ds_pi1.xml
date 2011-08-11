@@ -90,6 +90,16 @@
 							</config>
 						</TCEforms>
 					</dateFormat>
+					<resumecrop>
+						<TCEforms>
+							<label>LLL:EXT:ren_veille_documentaire/locallang_db.xml:flexform.pi1.resumecrop</label>
+							<config>
+								<type>input</type>
+								<size>60</size>
+								<default></default>
+							</config>
+						</TCEforms>
+					</resumecrop>
 					<sorting>
 						<TCEforms>
 							<label>LLL:EXT:ren_veille_documentaire/locallang_db.xml:flexform.pi1.sorting</label>

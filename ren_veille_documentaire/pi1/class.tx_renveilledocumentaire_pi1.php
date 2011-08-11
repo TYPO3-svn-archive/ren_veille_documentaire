@@ -187,9 +187,13 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 			$template = $this->viewTemplate('###TEMPLATE_LIST###');
 			$subpart_item = $this->cObj->getSubpart($template, '###TEMPLATE_NOTICE###');
 			
+			$indice = 1;
 			foreach($aNotices as $iKey=>$aNotice){
 				$dataNotice = $this->getMarkersNotice($aNotice, false);
-				$sListe .= $this->cObj->substituteMarkerArrayCached($subpart_item, $dataNotice[0], $dataNotice[1]);
+				$markers = $dataNotice[0];
+				$indice ++;
+				$markers['###ALT###'] = ($indice%2) ? 'alt' : '';
+				$sListe .= $this->cObj->substituteMarkerArrayCached($subpart_item, $markers, $dataNotice[1]);
 			}
 		}
 				
@@ -397,9 +401,14 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 			}
 		}
 		$sActus=($sActus!='')?'<ul class="'.$this->prefixId.'_actus">'.$sActus.'</ul>':'';
-				
+			
+		$resume = $this->cObj->parseFunc($aNotice['resume'], $GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.']);
+		if ($this->conf['resumecrop'])
+			$resume = $this->cObj->stdWrap($resume, array('cropHTML' => $this->conf['resumecrop']));
+			
 		$aMarkerArray = array(
 			'###TITRE###' => $this->cObj->typoLink($aNotice['titre'], $aLinkConf),
+			'###MORE###' => $this->cObj->typoLink($this->pi_getLL('more'), $aLinkConf),
 			'###VEILLE_LABEL###' => $this->pi_getLL('veille_label'),
 			'###SOURCE###' => $sLesSources,
 			'###ICON_SOURCE###' => $sLesSourcesIcon,
@@ -410,7 +419,7 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 			'###DATE_LABEL###' => $this->pi_getLL('date_label'),
 			'###AUTEURS###' => $sLesAuteurs,
 			'###AUTEURS_LABEL###' => $this->pi_getLL('auteurs_label'),
-			'###RESUME###' => $aNotice['resume'],
+			'###RESUME###' => $resume,
 			'###RESUME_LABEL###' => $this->pi_getLL('resume_label'),
 			'###FICHIERS###' => $sLesFichiers,
 			'###FICHIERS_LABEL###' => $this->pi_getLL('fichiers_label'),
