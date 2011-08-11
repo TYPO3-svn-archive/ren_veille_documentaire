@@ -11,14 +11,19 @@
 
 <!-- ###TEMPLATE_LIST### begin -->
 	<div class="haut">###VEILLE_SELECT###	###NAV_PAGES###</div>
-	###LISTE###
+	<h3>###VEILLES###</h3>
+	<!-- ###TEMPLATE_NOTICES### begin --><ul class="liste"><!-- ###TEMPLATE_NOTICE### begin -->
+		<li><!-- ###SUBPART_SOURCE### begin -->
+			<span class="img">###ICON_SOURCE###</span><!-- ###SUBPART_SOURCE### begin -->
+			<span class="infos"><span class="titre">###TITRE###</span> <span class="date">###DATE###</span></span>
+		</li><!-- ###TEMPLATE_NOTICE### end -->
+	</ul><!-- ###TEMPLATE_NOTICES### end -->
+	
 	<div class="bas">###NAV_PAGES###</div>
 	
 <!-- ###TEMPLATE_LIST### end -->
 
-<!-- ###TEMPLATE_ITEM### begin -->
-	<li><span class="img">###ICON_SOURCE###</span><span class="infos"><span class="titre">###TITRE###</span> <span class="date">###DATE###</span></span></li>
-<!-- ###TEMPLATE_ITEM### end -->
+
 
 <h2>List news template</h2>
 
@@ -32,16 +37,15 @@
 
 <!-- ###TEMPLATE_DETAIL### begin -->
 	<h2>###TITRE###</h2>
-	<p class="resume">###RESUME###</p>
-	<div class="links">
-		<h3>###FICHIERS_LABEL###</h3> ###FICHIERS###
-		<h3>###URL_LABEL###</h3> ###URL###
-	</div>
-	<p class="auteurs">###AUTEURS###</p>
-	<p class="infos">###VEILLE### - ###SOURCE### ###ICON_SOURCE### - ###DATE###</p>
-
+	<p class="source">###VEILLE### - <!-- ###SUBPART_SOURCE### begin -->###ICON_SOURCE######SOURCE### - <!-- ###SUBPART_SOURCE### end -->###DATE###</p><!-- ###SUBPART_RESUME### begin -->
+	<p class="resume">###RESUME###</p><!-- ###SUBPART_RESUME### end -->
+	<div class="links"><!-- ###SUBPART_FICHIERS### begin -->
+		<h3>###FICHIERS_LABEL###</h3> ###FICHIERS###<!-- ###SUBPART_FICHIERS### end --><!-- ###SUBPART_URL### begin -->
+		<h3>###URL_LABEL###</h3> ###URL###<!-- ###SUBPART_URL### end -->
+	</div><!-- ###SUBPART_AUTEURS### begin -->
+	<p class="auteurs">###AUTEURS###</p><!-- ###SUBPART_AUTEURS### end --><!-- ###SUBPART_MOTS_CLES### begin -->
 	<h3 class="keywords">###MOTS_CLES_LABEL###</h3>
-	<p class="mots_cles">###MOTS_CLES###</p>
+	<p class="mots_cles">###MOTS_CLES###</p><!-- ###SUBPART_MOTS_CLES### end -->
 <!-- ###TEMPLATE_DETAIL### end -->
 
 <!--<div class="relation">

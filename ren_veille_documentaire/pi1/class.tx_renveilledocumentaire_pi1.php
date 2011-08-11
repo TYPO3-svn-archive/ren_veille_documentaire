@@ -67,69 +67,55 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 		return $this->pi_wrapInBaseClass($sContent);
 	}
 	
+	/**
+	 * Render veilles list
+	 *
+	 * @return html
+	 */
 	function renderListVeilles() {
 		$sContent = '';
 		
 		$sWhere='';
 		$iPiVarsVeille=0;
+		$veillesNames = '';
 		if((isset($this->piVars['veille']))&&($this->piVars['veille']>0)) $iPiVarsVeille=$this->piVars['veille'];
-		if($this->conf['veilles']!=''){
+		if($this->conf['veilles']!='' || $iPiVarsVeille){
 			$aVeillesAffichees=array();
 			$aVeilles=explode(',',$this->conf['veilles']);
 			$aVeillesAffichees=($iPiVarsVeille>0) ? array(0=>$iPiVarsVeille):$aVeilles;
 	
 			if(is_array($aVeillesAffichees)){
-			foreach ($aVeillesAffichees as $iKey=>$iVeilleUid){
-				$sOp=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?' AND ':' OR ';
-				$sWhere.=($sWhere=='')?'':$sOp;
-				$sWhere.='(veille='.$iVeilleUid.' OR veille LIKE \''.$iVeilleUid.',%\' OR veille LIKE \'%,'.$iVeilleUid.',%\' OR veille LIKE \'%,'.$iVeilleUid.'\')';
-			}
-			}
-			if ((count($aVeilles))>1){
-				$sVeilleSelect='
-				<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="post">
-					<fieldset>
-						<select name="'.$this->prefixId.'[veille]">
-							<option></option>';
-					foreach ($aVeilles as $iKey=>$iVeilleUid){
-						$aRVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,titre', $this->aTables['veilles'], 'uid='.$iVeilleUid.$this->cObj->enableFields($this->aTables['veilles']), '', 'titre');
-						foreach($aRVeilles as $iKey=>$aOptVeille){
-							$sSelected=($aOptveille['uid']==$iPiVarsVeille)?' selected="selected"':'';
-							$sVeilleSelect.='
-							<option value="'.$aOptVeille['uid'].'"'.$sSelected.'>'.$aOptVeille['titre'].'</option>';
-						}
+				$outputVeillesNames = array();
+				foreach ($aVeillesAffichees as $iKey=>$iVeilleUid){
+					$sOp=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?' AND ':' OR ';
+					$sWhere.=($sWhere=='')?'':$sOp;
+					$sWhere.='(veille='.$iVeilleUid.' OR veille LIKE \''.$iVeilleUid.',%\' OR veille LIKE \'%,'.$iVeilleUid.',%\' OR veille LIKE \'%,'.$iVeilleUid.'\')';
+					$outputVeillesNames[] = $iVeilleUid;
+				}
+				
+				$veilles = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+					'`' . $this->aTables['veilles'] .'`.`titre`', 
+					'`' . $this->aTables['veilles'] .'`', 
+					'`' . $this->aTables['veilles'] .'`.`uid` IN (' . implode(',', $outputVeillesNames) .') ' . $this->cObj->enableFields($this->aTables['veilles']),
+					'',
+					'`' . $this->aTables['veilles'] .'`.`titre`'					
+				);
+				if (is_array($veilles) && !empty($veilles)) {
+					$outputVeillesNames = array();
+					foreach ($veilles as $veille) {
+						$outputVeillesNames[] = $veille['titre'];
 					}
-				$sVeilleSelect.='
-						</select>
-						<input type="submit" value="OK" class="submit"/>
-					</fieldset>
-				</form>
-				';
+					$veillesNames = implode(', ', $outputVeillesNames);
+				}
+			}
+			
+			if ((count($aVeilles))>1){
+				$sVeilleSelect = $this->renderFormSelectVeille($aVeilles);
 			}
 			else $sVeilleSelect='';
 		}
 		else{
-			$sVeilleSelect='
-			<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="post">
-				<fieldset>
-					<select name="'.$this->prefixId.'[veille]">
-						<option></option>';
-				
-					$aRVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,titre', $this->aTables['veilles'], $this->cObj->enableFields($this->aTables['veilles']), '', 'titre');
-					if(is_array($aRVeilles)){
-					foreach($aRVeilles as $iKey=>$aOptVeille){
-						$sSelected=($aOptVeille['uid']==$iPiVarsVeille)?' selected="selected"':'';
-						$sVeilleSelect.='
-						<option value="'.$aOptVeille['uid'].'"'.$sSelected.'>'.$aOptVeille['titre'].'</option>';
-					}
-					}
-				
-			$sVeilleSelect.='
-					</select>
-					<input type="submit" value="OK" class="submit"/>
-				</fieldset>
-			</form>
-			';
+			$sVeilleSelect = $this->renderFormSelectVeille();
 		}
 		
 		$sLimit='';
@@ -196,201 +182,336 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 		}
 		
 		$sListe='';
-		$sSelect = 'tx_renveilledocumentaire_notices.veille,tx_renveilledocumentaire_notices.uid,tx_renveilledocumentaire_notices.titre,tx_renveilledocumentaire_notices.date, tx_renveilledocumentaire_sources.icon';
-		$sFrom = $this->aTables['notices'].' INNER JOIN tx_renveilledocumentaire_sources ON tx_renveilledocumentaire_notices.source = tx_renveilledocumentaire_sources.uid';
-		
-		$aNotices=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows($sSelect, $sFrom, $sWhere.$this->cObj->enableFields($this->aTables['notices']), '', 'date DESC', $sLimit);
-		if(is_array($aNotices)){
+		$aNotices = $this->getNotices(0, ' AND ' . $sWhere, '', $sLimit);
+		if(is_array($aNotices) && !empty($aNotices)){
+			$template = $this->viewTemplate('###TEMPLATE_LIST###');
+			$subpart_item = $this->cObj->getSubpart($template, '###TEMPLATE_NOTICE###');
+			
 			foreach($aNotices as $iKey=>$aNotice){
-				$sLesVeilles='';
-				$aSesVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('titre', $this->aTables['veilles'], 'uid IN('.$aNotice['veille'].')'.$this->cObj->enableFields($this->aTables['veilles']));
-				foreach($aSesVeilles as $iKey=>$aSaVeille){
-					$sLesVeilles.=($sLesVeilles!='')?', '.$aSaVeille['titre']:$aSaVeille['titre'];
-				}
-				$aLinkConf = array();
-				$aLinkConf = array(
-					'parameter' => ($this->conf['detailsnotice']!='')?$this->conf['detailsnotice']:$GLOBALS['TSFE']->id,
-					'additionalParams' => '&'.$this->prefixId.'[notice]=' . $aNotice['uid'],
-					//'useCashHash' => true,
-				);
-				
-				$aImgTSConfig = $this->conf['icon.'];
-				$aImgTSConfig['file'] = "uploads/tx_renveilledocumentaire/".$aNotice['icon'];
-				$sIcon = $this->cObj->IMG_RESOURCE( $aImgTSConfig );
-				$sLogo = '';
-				if(!$sIcon || $sIcon==""){
-					$sLogo = "<img src='uploads/tx_renveilledocumentaire/".$aNotice['icon']."' />";
-				}else{
-					$sLogo = '<img src="' . $sIcon . '" />';
-				}
-				
-				$aMarkerArray=array();
-				$aMarkerArray['###TITRE###']=$this->cObj->typoLink($aNotice['titre'], $aLinkConf);
-				$aMarkerArray['###ICON_SOURCE###']=$sLogo;
-				$aMarkerArray['###DATE###']=strftime($this->conf['dateFormat'],$aNotice['date']);
-				$aMarkerArray['###VEILLE###']=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?'':$sLesVeilles;
-				
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'])) {
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'] as $_classRef) {
-						$_procObj = & t3lib_div::getUserObj($_classRef);
-						$_procObj->additionalNoticeSingleFields($aMarkerArray, $aNotice, $this->conf, $this);
-					}
-				}
-				
-				$sListe.= $this->viewTemplate('###TEMPLATE_ITEM###',$aMarkerArray);
+				$dataNotice = $this->getMarkersNotice($aNotice, false);
+				$sListe .= $this->cObj->substituteMarkerArrayCached($subpart_item, $dataNotice[0], $dataNotice[1]);
 			}
 		}
-		$sListe=($sListe!='')?'<ul class="'.$this->prefixId.'_liste">'.$sListe.'</ul>':'';
-		
+				
 		$aMarkerArray=array();
-			$aMarkerArray['###VEILLE_SELECT###']=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?'':$sVeilleSelect;
-			$aMarkerArray['###NAV_PAGES###']=$sPagesLinks;
-			$aMarkerArray['###LISTE###']=$sListe;
+		$aMarkerArray['###VEILLE_SELECT###']=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?'':$sVeilleSelect;
+		$aMarkerArray['###NAV_PAGES###']=$sPagesLinks;
+		$aMarkerArray['###VEILLES###']=$veillesNames;
+		
+		$subpartArray = array();
+		$subpartArray['###TEMPLATE_NOTICE###'] = $sListe;
+		if (!$sListe)
+			$subpartArray['###TEMPLATE_NOTICES###'] = '';
 			
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalListFields'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalListFields'] as $_classRef) {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$_procObj->additionalListFields($aMarkerArray, $this->conf, $this);
+				$_procObj->additionalListFields($aMarkerArray, $subpartArray, $this->conf, $this);
 			}
 		}
-				
-		$sContent.= $this->viewTemplate('###TEMPLATE_LIST###',$aMarkerArray);
+		
+		$sContent.= $this->viewTemplate('###TEMPLATE_LIST###',$aMarkerArray, $subpartArray);
 		
 		return $sContent;
 	}
 	
+	/**
+	 * Get notices rows
+	 *
+	 * @param int notice uid
+	 * @return array
+	 */
+	function getNotices($uid = 0, $addWhere = '', $order = '', $limit = 50) {
+		if ($uid) 
+			$addWhere .= ' AND `' . $this->aTables['notices'] . '`.`uid` = ' . $uid;
+		
+		if (!$order) {
+			switch ($this->conf['sorting']) {
+				case 'DATE':
+					$order = '`' . $this->aTables['notices'] . '`.`crdate` DESC';
+				break;
+				case 'SORTING':
+					$order = '`' . $this->aTables['notices'] . '`.`sorting`';
+				break;
+				case 'TITRE':
+				default:
+					$order = '`' . $this->aTables['notices'] . '`.`titre`';
+			}
+		}
+		
+		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'`' . $this->aTables['notices'] . '`.`uid`,
+				`' . $this->aTables['notices'] . '`.`veille`,
+				`' . $this->aTables['notices'] . '`.`source`,
+				`' . $this->aTables['notices'] . '`.`resume`,
+				`' . $this->aTables['notices'] . '`.`auteurs`,
+				`' . $this->aTables['notices'] . '`.`mots_cles`,
+				`' . $this->aTables['notices'] . '`.`fichiers`,
+				`' . $this->aTables['notices'] . '`.`url`,
+				`' . $this->aTables['notices'] . '`.`voir_aussi`,
+				`' . $this->aTables['notices'] . '`.`actus`,
+				`' . $this->aTables['notices'] . '`.`titre`,
+				`' . $this->aTables['notices'] . '`.`date`,
+				`' . $this->aTables['sources'] . '`.`icon`,
+				`' . $this->aTables['sources'] . '`.`nom`', 
+			'`' . $this->aTables['notices'] . '`
+				LEFT OUTER JOIN `' . $this->aTables['sources'] . '`
+					ON `' . $this->aTables['notices'] . '`.`source` = `' . $this->aTables['sources'] . '`.`uid`', 
+			'1 ' . $this->cObj->enableFields($this->aTables['notices']) . $addWhere,
+			'',
+			$order,
+			$limit
+		);
+	}
+	
+	/**
+	 * Render details notice
+	 *
+	 * @param int notice uid
+	 * @return html
+	 */
 	function renderNotice($uid) {
 		$sContent = '';
 		
-		$aNotices=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,veille,source,resume,auteurs,mots_cles,fichiers,url,voir_aussi,actus,titre,date', $this->aTables['notices'], 'uid='.$uid .$this->cObj->enableFields($this->aTables['notices']));
+		$aNotices = $this->getNotices($uid);
 		if (is_array($aNotices)){
 			foreach($aNotices as $iKey=>$aNotice){
-				$sLesVeilles='';
-				$aSesVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('titre', $this->aTables['veilles'], 'uid IN('.$aNotice['veille'].')'.$this->cObj->enableFields($this->aTables['veilles']));
-				if(is_array($aSesVeilles)){
-					foreach($aSesVeilles as $iKey=>$aSaVeille){
-						$sLesVeilles.=($sLesVeilles!='')?', '.$aSaVeille['titre']:$aSaVeille['titre'];
-					}
-				}
-				$sLesSources='';
-				$sLesSourcesIcon = '';
-				$aImgTSConfig = $this->conf['icon.'];
-				$aSesSources=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('nom, icon', $this->aTables['sources'], 'uid IN('.$aNotice['source'].')'.$this->cObj->enableFields($this->aTables['sources']));
-				if(is_array($aSesSources)){
-					foreach($aSesSources as $iKey=>$aSaSource){
-						$sLesSources.=($sLesSources!='')?', '.$aSaSource['nom']:$aSaSource['nom'];
-						$aImgTSConfig['file'] = "uploads/tx_renveilledocumentaire/".$aSaSource['icon'];
-						$sIcon = $this->cObj->IMG_RESOURCE( $aImgTSConfig );
-						if(!$sIcon || $sIcon==""){
-							$sLesSourcesIcon .= "<img src='uploads/tx_renveilledocumentaire/".$aSaSource['icon']."' />";
-						}else{
-							$sLesSourcesIcon .= '<img src="' . $sIcon . '" />';
-						}
-					}
-				}
-				
-				
-				
-				$sLesAuteurs='';
-				$aSesAuteurs=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('nom', $this->aTables['auteurs'], 'uid IN('.$aNotice['auteurs'].')'.$this->cObj->enableFields($this->aTables['auteurs']));
-				if(is_array($aSesAuteurs)){
-					foreach($aSesAuteurs as $iKey=>$aSonAuteur){
-						$sLesAuteurs.=($sLesAuteurs!='')?', '.$aSonAuteur['nom']:$aSonAuteur['nom'];
-					}
-				}
-				
-				$sLesMotsCles='';
-				$aSesMotsCles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('word AS mot', $this->aTables['mots_cles'], 'uid IN('.$aNotice['mots_cles'].')'.$this->cObj->enableFields($this->aTables['mots_cles']));
-				if(is_array($aSesMotsCles)){
-				foreach($aSesMotsCles as $iKey=>$aSonMotCle){
-					$sLesMotsCles.=($sLesMotsCles!='')?', '.$aSonMotCle['mot']:$aSonMotCle['mot'];
-				}
-				}
-				
-				$aFileArray=explode(',',$aNotice['fichiers']);
-				$aFilesData = array();
-				$aLienConf=array();
-					$aLienConf['ATagParams']='class="'.$this->extKey.'_lien"';
-					$aLienConf['target']='_blank';
-					$aLienConf['fileTarget']='_blank';
-				$sLesFichiers='';
-				
-				if(is_array($aFileArray)){
-				foreach($aFileArray as $iKey => $sFileName)	{
-					$sAbsPath = t3lib_div::getFileAbsFileName('uploads/tx_renveilledocumentaire/'.$sFileName);
-					if (@is_file($sAbsPath))	{
-						$aLienConf['parameter']='uploads/tx_renveilledocumentaire/'.$sFileName;
-						$sLesFichiers.='<li>'.$this->cObj->typoLink($sFileName,$aLienConf).'</li>';
-					}
-				}
-				}
-				$sLesFichiers=($sLesFichiers!='')?'<ul class="'.$this->prefixId.'_fichiers">'.$sLesFichiers.'</ul>':'';
-				
-				$aLienConfUrl=array();
-				$aLienConfUrl['parameter']=$aNotice['url'];
-				$aLienConfUrl['target']='_blank';
-				$aLienConfUrl['fileTarget']='_blank';
-				
-				$sVoirAussi='';
-				$aSesVoirAussi=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('titre,uid', $this->aTables['notices'], 'uid IN('.$aNotice['voir_aussi'].')'.$this->cObj->enableFields($this->aTables['notices']));
-				$aLinkConfAussi=array();
-				$aLinkConfAussi['parameter']=($this->conf['detailsnotice']!='')?$this->conf['detailsnotice']:$GLOBALS['TSFE']->id;
-				if(is_array($aSesVoirAussi)){
-					foreach($aSesVoirAussi as $iKey=>$aSonVoirAussi){
-						$aLinkConfAussi['additionalParams']='&'.$this->prefixId.'[notice]=' . $aSonVoirAussi['uid'];
-						$sVoirAussi.='<li>'.$this->cObj->typoLink($aSonVoirAussi['titre'],$aLinkConfAussi).'</li>';
-					}
-				}
-				$sVoirAussi=($sVoirAussi!='')?'<ul class="'.$this->prefixId.'_voir_aussi">'.$sVoirAussi.'</ul>':'';
-				
-				$sActus='';
-				$aSesActus=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('title,uid', 'tt_news', 'uid IN('.$aNotice['actus'].')'.$this->cObj->enableFields('tt_news'));
-				$aLinkConfActus=array();
-				$aLinkConfActus['parameter']=($this->conf['pagenews']!='')?$this->conf['pagenews']:$GLOBALS['TSFE']->id;
-				if (is_array($aSesActus)){
-					foreach($aSesActus as $iKey=>$sonactu){
-						$aLinkConfActus['additionalParams']='&tx_ttnews[tt_news]=' . $sonactu['uid'];
-						$sActus.='<li>'.$this->cObj->typoLink($sonactu['title'],$aLinkConfActus).'</li>';
-					}
-				}
-				$sActus=($sActus!='')?'<ul class="'.$this->prefixId.'_actus">'.$sActus.'</ul>':'';
-								
-				$aMarkerArray=array();
-				$aMarkerArray['###TITRE###']=$this->cObj->typoLink($aNotice['titre'], $aLinkConf);
-				$aMarkerArray['###VEILLE###']=$sLesVeilles;
-				$aMarkerArray['###VEILLE_LABEL###']=$this->pi_getLL('veille_label');
-				$aMarkerArray['###SOURCE###']=$sLesSources;
-				$aMarkerArray['###ICON_SOURCE###']=$sLesSourcesIcon;
-				$aMarkerArray['###SOURCE_LABEL###']=$this->pi_getLL('source_label');
-				$aMarkerArray['###MOTS_CLES###']=$sLesMotsCles;
-				$aMarkerArray['###MOTS_CLES_LABEL###']=$this->pi_getLL('mots_cles_label');
-				$aMarkerArray['###DATE###']=strftime($this->conf['dateFormat'],$aNotice['date']);
-				$aMarkerArray['###DATE_LABEL###']=$this->pi_getLL('date_label');
-				$aMarkerArray['###AUTEURS###']=$sLesAuteurs;
-				$aMarkerArray['###AUTEURS_LABEL###']=$this->pi_getLL('auteurs_label');
-				$aMarkerArray['###RESUME###']=$aNotice['resume'];
-				$aMarkerArray['###RESUME_LABEL###']=$this->pi_getLL('resume_label');
-				$aMarkerArray['###FICHIERS###']=$sLesFichiers;
-				$aMarkerArray['###FICHIERS_LABEL###']=$this->pi_getLL('fichiers_label');
-				$aMarkerArray['###URL###']=$this->cObj->typoLink($aNotice['url'],$aLienConfUrl);
-				$aMarkerArray['###URL_LABEL###']=($aMarkerArray['###URL###']!='')?$this->pi_getLL('url_label'):'';
-				$aMarkerArray['###VOIR_AUSSI###']=$sVoirAussi;
-				$aMarkerArray['###VOIR_AUSSI_LABEL###']=($aMarkerArray['###VOIR_AUSSI###']!='')?'<h2><span>'.$this->pi_getLL('voir_aussi_label').'</span></h2>':'';
-				$aMarkerArray['###ACTUS###']=$sActus;
-				$aMarkerArray['###ACTUS_LABEL###']=($aMarkerArray['###ACTUS###']!='')?'<h2><span>'.$this->pi_getLL('actus_label').'</span></h2>':'';
-				
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'])) {
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'] as $_classRef) {
-						$_procObj = & t3lib_div::getUserObj($_classRef);
-						$_procObj->additionalNoticeSingleFields($aMarkerArray, $aNotice, $this->conf, $this);
-					}
-				}
-	
-				$sContent.= $this->viewTemplate('###TEMPLATE_DETAIL###',$aMarkerArray);
+				$dataNotice = $this->getMarkersNotice($aNotice);
+				$sContent.= $this->viewTemplate('###TEMPLATE_DETAIL###', $dataNotice[0], $dataNotice[1]);
 			}
 		}
 		return $sContent;
 	}	
+		
+	/**
+	 * Get Markers details notice
+	 *
+	 * @param array notice row
+	 * @param boolean view details or not
+	 * @return array
+	 */
+	function getMarkersNotice($aNotice, $details = true) {
+		
+		// details link
+		if (!$details) {
+			$aLinkConf = array();
+			$aLinkConf = array(
+				'parameter' => ($this->conf['detailsnotice']!='')?$this->conf['detailsnotice']:$GLOBALS['TSFE']->id,
+				'additionalParams' => '&'.$this->prefixId.'[notice]=' . $aNotice['uid'],
+				//'useCashHash' => true,
+			);
+		}
+		
+		// veille
+		$sLesVeilles='';
+		$aSesVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('titre', $this->aTables['veilles'], 'uid IN('.$aNotice['veille'].')'.$this->cObj->enableFields($this->aTables['veilles']));
+		if(is_array($aSesVeilles)){
+			foreach($aSesVeilles as $iKey=>$aSaVeille){
+				$sLesVeilles.=($sLesVeilles!='')?', '.$aSaVeille['titre']:$aSaVeille['titre'];
+			}
+		}	
+
+		// sources
+		$sLesSources='';
+		$sLesSourcesIcon = '';
+		$aImgTSConfig = $this->conf['icon.'];
+		$aSesSources=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('nom, icon', $this->aTables['sources'], 'uid IN('.$aNotice['source'].')'.$this->cObj->enableFields($this->aTables['sources']));
+		if(is_array($aSesSources)){
+			foreach($aSesSources as $iKey=>$aSaSource){
+				$sLesSources.=($sLesSources!='')?', '.$aSaSource['nom']:$aSaSource['nom'];
+				$aImgTSConfig['file'] = "uploads/tx_renveilledocumentaire/".$aSaSource['icon'];
+				$sIcon = $this->cObj->IMG_RESOURCE( $aImgTSConfig );
+				if(!$sIcon || $sIcon==""){
+					$sLesSourcesIcon .= "<img src='uploads/tx_renveilledocumentaire/".$aSaSource['icon']."' />";
+				}else{
+					$sLesSourcesIcon .= '<img src="' . $sIcon . '" />';
+				}
+			}
+		}
+		
+		// mots clés 
+		$sLesMotsCles='';
+		$aSesMotsCles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('word AS mot', $this->aTables['mots_cles'], 'uid IN('.$aNotice['mots_cles'].')'.$this->cObj->enableFields($this->aTables['mots_cles']));
+		if(is_array($aSesMotsCles)){
+		foreach($aSesMotsCles as $iKey=>$aSonMotCle){
+			$sLesMotsCles.=($sLesMotsCles!='')?', '.$aSonMotCle['mot']:$aSonMotCle['mot'];
+		}
+		}
+		
+		// auteurs
+		$sLesAuteurs='';
+		$aSesAuteurs=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('nom', $this->aTables['auteurs'], 'uid IN('.$aNotice['auteurs'].')'.$this->cObj->enableFields($this->aTables['auteurs']));
+		if(is_array($aSesAuteurs)){
+			foreach($aSesAuteurs as $iKey=>$aSonAuteur){
+				$sLesAuteurs.=($sLesAuteurs!='')?', '.$aSonAuteur['nom']:$aSonAuteur['nom'];
+			}
+		}
+		
+		// fichiers
+		$aFileArray=explode(',',$aNotice['fichiers']);
+		$aFilesData = array();
+		$aLienConf=array();
+		$aLienConf['ATagParams']='class="'.$this->extKey.'_lien"';
+		$aLienConf['target']='_blank';
+		$aLienConf['fileTarget']='_blank';
+					
+		$sLesFichiers='';
+		if(is_array($aFileArray)){
+		foreach($aFileArray as $iKey => $sFileName)	{
+			$sAbsPath = t3lib_div::getFileAbsFileName('uploads/tx_renveilledocumentaire/'.$sFileName);
+			if (@is_file($sAbsPath))	{
+				$aLienConf['parameter']='uploads/tx_renveilledocumentaire/'.$sFileName;
+				$sLesFichiers.='<li>'.$this->cObj->typoLink($sFileName,$aLienConf).'</li>';
+			}
+		}
+		}
+		$sLesFichiers=($sLesFichiers!='')?'<ul class="'.$this->prefixId.'_fichiers">'.$sLesFichiers.'</ul>':'';
+		
+		$aLienConfUrl=array();
+		$aLienConfUrl['parameter']=$aNotice['url'];
+		$aLienConfUrl['target']='_blank';
+		$aLienConfUrl['fileTarget']='_blank';
+		
+		// voir aussi
+		$sVoirAussi='';
+		$aSesVoirAussi=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('titre,uid', $this->aTables['notices'], 'uid IN('.$aNotice['voir_aussi'].')'.$this->cObj->enableFields($this->aTables['notices']));
+		$aLinkConfAussi=array();
+		$aLinkConfAussi['parameter']=($this->conf['detailsnotice']!='')?$this->conf['detailsnotice']:$GLOBALS['TSFE']->id;
+		if(is_array($aSesVoirAussi)){
+			foreach($aSesVoirAussi as $iKey=>$aSonVoirAussi){
+				$aLinkConfAussi['additionalParams']='&'.$this->prefixId.'[notice]=' . $aSonVoirAussi['uid'];
+				$sVoirAussi.='<li>'.$this->cObj->typoLink($aSonVoirAussi['titre'],$aLinkConfAussi).'</li>';
+			}
+		}
+		$sVoirAussi=($sVoirAussi!='')?'<ul class="'.$this->prefixId.'_voir_aussi">'.$sVoirAussi.'</ul>':'';
+		
+		// actus
+		$sActus='';
+		$aSesActus=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('title,uid', 'tt_news', 'uid IN('.$aNotice['actus'].')'.$this->cObj->enableFields('tt_news'));
+		$aLinkConfActus=array();
+		$aLinkConfActus['parameter']=($this->conf['pagenews']!='')?$this->conf['pagenews']:$GLOBALS['TSFE']->id;
+		if (is_array($aSesActus)){
+			foreach($aSesActus as $iKey=>$sonactu){
+				$aLinkConfActus['additionalParams']='&tx_ttnews[tt_news]=' . $sonactu['uid'];
+				$sActus.='<li>'.$this->cObj->typoLink($sonactu['title'],$aLinkConfActus).'</li>';
+			}
+		}
+		$sActus=($sActus!='')?'<ul class="'.$this->prefixId.'_actus">'.$sActus.'</ul>':'';
+				
+		$aMarkerArray = array(
+			'###TITRE###' => $this->cObj->typoLink($aNotice['titre'], $aLinkConf),
+			'###VEILLE_LABEL###' => $this->pi_getLL('veille_label'),
+			'###SOURCE###' => $sLesSources,
+			'###ICON_SOURCE###' => $sLesSourcesIcon,
+			'###SOURCE_LABEL###' => $this->pi_getLL('source_label'),
+			'###MOTS_CLES###' => $sLesMotsCles,
+			'###MOTS_CLES_LABEL###' => $this->pi_getLL('mots_cles_label'),
+			'###DATE###' => strftime($this->conf['dateFormat'],$aNotice['date']),
+			'###DATE_LABEL###' => $this->pi_getLL('date_label'),
+			'###AUTEURS###' => $sLesAuteurs,
+			'###AUTEURS_LABEL###' => $this->pi_getLL('auteurs_label'),
+			'###RESUME###' => $aNotice['resume'],
+			'###RESUME_LABEL###' => $this->pi_getLL('resume_label'),
+			'###FICHIERS###' => $sLesFichiers,
+			'###FICHIERS_LABEL###' => $this->pi_getLL('fichiers_label'),
+			'###URL###' => $this->cObj->typoLink($aNotice['url'],$aLienConfUrl),
+			'###URL_LABEL###' => $this->pi_getLL('url_label'),
+			'###VOIR_AUSSI###' => $sVoirAussi,
+			'###VOIR_AUSSI_LABEL###' => ($aMarkerArray['###VOIR_AUSSI###']!='')?'<h2><span>'.$this->pi_getLL('voir_aussi_label').'</span></h2>':'',
+			'###ACTUS###' => $sActus,
+			'###ACTUS_LABEL###' => ($aMarkerArray['###ACTUS###']!='')?'<h2><span>'.$this->pi_getLL('actus_label').'</span></h2>':'',
+		);
+		
+		if (!$details) {
+			$aMarkerArray['###VEILLE###']=((isset($this->conf['operateur']))&&($this->conf['operateur']>0))?'':$sLesVeilles;
+		} else {
+			$aMarkerArray['###VEILLE###']=$sLesVeilles;
+		}
+		
+		$subpartArray = array();
+		if (!$aNotice['titre']) 
+			$subpartArray['###SUBPART_TITRE###'] = '';
+		if (!$sLesSources) 
+			$subpartArray['###SUBPART_SOURCE###'] = '';
+		if (!$sLesMotsCles) 
+			$subpartArray['###SUBPART_MOTS_CLES###'] = '';
+		if (!$sLesAuteurs) 
+			$subpartArray['###SUBPART_AUTEURS###'] = '';
+		if (!$aNotice['resume']) 
+			$subpartArray['###SUBPART_RESUME###'] = '';
+		if (!$sLesFichiers) 
+			$subpartArray['###SUBPART_FICHIERS###'] = '';
+		if (!$aNotice['url']) 
+			$subpartArray['###SUBPART_URL###'] = '';
+		if (!$sVoirAussi) 
+			$subpartArray['###SUBPART_VOIR_AUSSI###'] = '';
+		if (!$sActus) 
+			$subpartArray['###SUBPART_ACTUS###'] = '';
+		
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['additionalNoticeSingleFields'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->additionalNoticeSingleFields($aMarkerArray, $subpartArray, $aNotice, $this->conf, $this);
+			}
+		}
+		
+		return array($aMarkerArray, $subpartArray);
+	}
+	
+	/**
+	 * Render form to select veilles
+	 *
+	 * @param array/null array of veilles 
+	 * @return html
+	 */
+	function renderFormSelectVeille($veilles = null) {
+		$sVeilleSelect ='
+		<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="post">
+			<fieldset>
+				<select name="'.$this->prefixId.'[veille]">
+					<option></option>';
+		
+		if ($veilles && is_array($veilles) && !empty($veilles)) {
+			foreach ($aVeilles as $iKey=>$iVeilleUid){
+				$aRVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+					'uid,titre', 
+					$this->aTables['veilles'], 
+					'uid=' . $iVeilleUid . $this->cObj->enableFields($this->aTables['veilles']), 
+					'', 
+					'titre'
+				);
+				foreach($aRVeilles as $iKey=>$aOptVeille){
+					$sSelected=($aOptveille['uid']==$iPiVarsVeille)?' selected="selected"':'';
+					$sVeilleSelect.='
+					<option value="'.$aOptVeille['uid'].'"'.$sSelected.'>'.$aOptVeille['titre'].'</option>';
+				}
+			}
+		} else {
+			$aRVeilles=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+				'uid,titre', 
+				$this->aTables['veilles'], 
+				'1 ' . $this->cObj->enableFields($this->aTables['veilles']), 
+				'', 
+				'titre'
+			);
+			if(is_array($aRVeilles)){
+				foreach($aRVeilles as $iKey=>$aOptVeille){
+					$sSelected=($aOptVeille['uid']==$iPiVarsVeille)?' selected="selected"':'';
+					$sVeilleSelect.='
+					<option value="'.$aOptVeille['uid'].'"'.$sSelected.'>'.$aOptVeille['titre'].'</option>';
+				}
+			}
+		}
+			
+		$sVeilleSelect.='
+				</select>
+				<input type="submit" value="OK" class="submit"/>
+			</fieldset>
+		</form>
+		';
+			
+		return $sVeilleSelect;
+	}
 	
 }
 

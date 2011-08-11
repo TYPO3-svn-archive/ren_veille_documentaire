@@ -61,8 +61,12 @@ class tx_renveilledocumentaire_common extends tslib_pibase
 		!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]))
 			$this->conf = array_merge(unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]),$this->conf);
 		
-		$this->template = $this->getTemplateFile('');
-		//echo $this->template;
+		if ($this->conf['template']) {
+			$this->template = t3lib_div::getFileAbsFileName($this->conf['template']);
+		} else {
+			$this->template = $this->getTemplateFile('');
+		}
+		
 		$this->incCssFile(t3lib_extMgm::siteRelPath($this->extKey) . 'res/css/default.css');
 		
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['initConfiguration'])) {

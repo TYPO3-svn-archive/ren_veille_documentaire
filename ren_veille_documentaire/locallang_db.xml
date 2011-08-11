@@ -49,6 +49,11 @@
 			<label index="flexform.pi1.selection">Sélection</label>
 			<label index="flexform.pi1.veilles">Veilles documentaire</label>
 			<label index="flexform.pi1.operateur">opérateur</label>
+			<label index="flexform.pi1.sorting">Affichage des notices</label>
+			<label index="flexform.pi1.sorting.0">ordre alphabétique</label>
+			<label index="flexform.pi1.sorting.1">date</label>
+			<label index="flexform.pi1.sorting.2">tri manuel</label>
+			<label index="flexform.pi3.limit">Limite</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="tx_renveilledocumentaire_sources">Source documentaire</label>

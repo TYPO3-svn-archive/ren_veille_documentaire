@@ -357,6 +357,17 @@ $TCA['tx_renveilledocumentaire_notices'] = array (
 				'type' => 'text',
 				'cols' => '30',	
 				'rows' => '5',
+				'wizards' => array(
+					'_PADDING' => 2,
+					'RTE' => array(
+						'notNewRecords' => 1,
+						'RTEonly'       => 1,
+						'type'          => 'script',
+						'title'         => 'Full screen Rich Text Editing|Formatteret redigering i hele vinduet',
+						'icon'          => 'wizard_rte2.gif',
+						'script'        => 'wizard_rte.php',
+					)
+				)
 			)
 		),
 		'mots_cles' => array (		
@@ -519,7 +530,7 @@ $TCA['tx_renveilledocumentaire_notices'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;1;;1-1-1, titre, source, date, resume, mots_cles, auteurs, fichiers, url, voir_aussi, actus, veille')
+		'0' => array('showitem' => 'hidden;;1;;1-1-1, titre, source, date, resume;;2;richtext:rte_transform[flag=rte_enabled|mode=ts], mots_cles, auteurs, fichiers, url, voir_aussi, actus, veille')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => 'starttime, endtime')
