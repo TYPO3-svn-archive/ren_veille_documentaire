@@ -81,13 +81,15 @@ class tx_renveilledocumentaire_pi3 extends tx_renveilledocumentaire_common {
 			'###TITLE###' => $this->pi_getLL('menu_title'),
 		);
 		
-		$veilles = $this->getLastVeilles();
+		$veilles = $this->getLastVeilles($this->conf['limit']);
 		
 		if (!is_array($veilles) || empty($veilles)) {
 			$subparts['###TEMPLATE_MENU_NOTEMPTY###'] = '';
 		} else {
 			$subpart_item = $this->cObj->getSubpart($template, '###TEMPLATE_MENU_ITEM###');
 			$output_item = '';
+			$prefixId = $this->prefixId;
+			$this->prefixId = 'tx_renveilledocumentaire_pi1';
 			foreach ($veilles as $veille) {
 				$markers_veille = array(
 					'###URL###' => $this->pi_linkTP_keepPIvars_url(array('veille' => $veille['uid']), 0, 1, $this->conf['detailsveille']),
@@ -96,6 +98,7 @@ class tx_renveilledocumentaire_pi3 extends tx_renveilledocumentaire_common {
 				);
 				$output_item .= $this->cObj->substituteMarkerArray($subpart_item, $markers_veille);	
 			}
+			$this->prefixId = $prefixId;
 			$subparts['###TEMPLATE_MENU_ITEM###'] = $output_item;
 		}
 		return $this->cObj->substituteMarkerArrayCached($template, $markers, $subparts);
@@ -108,12 +111,18 @@ class tx_renveilledocumentaire_pi3 extends tx_renveilledocumentaire_common {
 	 * @return array database result
 	 */
 	function getLastVeilles($limit = '') {
+		$addWhere = '';
+		
+		$data = t3lib_div::_GP('tx_renveilledocumentaire_pi1');
+		if ($data['veille']) 
+			$addWhere .= ' AND `' . $this->aTables['veilles'] . '`.`uid` != ' . $data['veille'];
+		
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'`' . $this->aTables['veilles'] . '`.`uid`,
 				`' . $this->aTables['veilles'] . '`.`titre` ,
 				`' . $this->aTables['veilles'] . '`.`descriptif`', 
 			'`' . $this->aTables['veilles'] . '`', 
-			'1 ' . $this->cObj->enableFields($this->aTables['veilles']), 
+			'1 ' . $this->cObj->enableFields($this->aTables['veilles']) . $addWhere, 
 			'', 
 			'`' . $this->aTables['veilles'] . '`.`crdate` DESC',
 			$limit
