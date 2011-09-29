@@ -530,7 +530,7 @@ $TCA['tx_renveilledocumentaire_notices'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;1;;1-1-1, titre, source, date, resume;;2;richtext:rte_transform[flag=rte_enabled|mode=ts], mots_cles, auteurs, fichiers, url, voir_aussi, actus, veille')
+		'0' => array('showitem' => 'hidden;;1;;1-1-1, titre, veille, source, date, resume;;2;richtext:rte_transform[flag=rte_enabled|mode=ts], mots_cles, auteurs, fichiers, url, voir_aussi, actus')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => 'starttime, endtime')

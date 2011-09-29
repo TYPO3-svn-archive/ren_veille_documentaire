@@ -243,6 +243,13 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 			}
 		}
 		
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['selectConfNotices'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['selectConfNotices'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->selectConfNotices($addWhere, $order, $limit, $this->conf, $this);
+			}
+		}
+		
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'`' . $this->aTables['notices'] . '`.`uid`,
 				`' . $this->aTables['notices'] . '`.`veille`,
@@ -322,6 +329,9 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 		$aSesSources=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('nom, icon', $this->aTables['sources'], 'uid IN('.$aNotice['source'].')'.$this->cObj->enableFields($this->aTables['sources']));
 		if(is_array($aSesSources)){
 			foreach($aSesSources as $iKey=>$aSaSource){
+				if (!$aSaSource['icon'])
+					continue;
+					
 				$sLesSources.=($sLesSources!='')?', '.$aSaSource['nom']:$aSaSource['nom'];
 				$aImgTSConfig['file'] = "uploads/tx_renveilledocumentaire/".$aSaSource['icon'];
 				$sIcon = $this->cObj->IMG_RESOURCE( $aImgTSConfig );
