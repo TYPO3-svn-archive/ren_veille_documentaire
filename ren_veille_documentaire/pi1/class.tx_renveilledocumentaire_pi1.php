@@ -401,7 +401,7 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 		
 		// actus
 		$sActus='';
-		$aSesActus=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('title,uid', 'tt_news', 'uid IN('.$aNotice['actus'].')'.$this->cObj->enableFields('tt_news'));
+		$aSesActus=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('title,uid', 'tt_news', 'uid IN('.$aNotice['actus'].') '.$this->cObj->enableFields('tt_news'));
 		$aLinkConfActus=array();
 		$aLinkConfActus['parameter']=($this->conf['pagenews']!='')?$this->conf['pagenews']:$GLOBALS['TSFE']->id;
 		if (is_array($aSesActus)){
@@ -436,9 +436,9 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 			'###URL###' => $this->cObj->typoLink($aNotice['url'],$aLienConfUrl),
 			'###URL_LABEL###' => $this->pi_getLL('url_label'),
 			'###VOIR_AUSSI###' => $sVoirAussi,
-			'###VOIR_AUSSI_LABEL###' => ($aMarkerArray['###VOIR_AUSSI###']!='')?'<h2><span>'.$this->pi_getLL('voir_aussi_label').'</span></h2>':'',
+			'###VOIR_AUSSI_LABEL###' => ($sVoirAussi!='')? $this->pi_getLL('voir_aussi_label') : '',
 			'###ACTUS###' => $sActus,
-			'###ACTUS_LABEL###' => ($aMarkerArray['###ACTUS###']!='')?'<h2><span>'.$this->pi_getLL('actus_label').'</span></h2>':'',
+			'###ACTUS_LABEL###' => ($sActus!='')? $this->pi_getLL('actus_label') : '',
 		);
 		
 		if (!$details) {
