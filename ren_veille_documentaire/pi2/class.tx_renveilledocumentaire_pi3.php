@@ -108,14 +108,25 @@ class tx_renveilledocumentaire_pi3 extends tx_renveilledocumentaire_common {
 	 * Get Last Veilles
 	 *
 	 * @param string/int $limit	limit results
+	 * @param string $order	ordering results
 	 * @return array database result
 	 */
-	function getLastVeilles($limit = '') {
+	function getLastVeilles($limit = '', $order = '') {
 		$addWhere = '';
 		
+		if (!$order)
+			$order = '`' . $this->aTables['veilles'] . '`.`crdate` DESC';
+			
 		$data = t3lib_div::_GP('tx_renveilledocumentaire_pi1');
 		if ($data['veille']) 
 			$addWhere .= ' AND `' . $this->aTables['veilles'] . '`.`uid` != ' . $data['veille'];
+		
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['selectConfLastVeilles'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['selectConfLastVeilles'] as $_classRef) {
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$_procObj->selectConfLastVeilles($addWhere, $order, $limit, $this->conf, $this);
+			}
+		}
 		
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'`' . $this->aTables['veilles'] . '`.`uid`,
@@ -124,7 +135,7 @@ class tx_renveilledocumentaire_pi3 extends tx_renveilledocumentaire_common {
 			'`' . $this->aTables['veilles'] . '`', 
 			'1 ' . $this->cObj->enableFields($this->aTables['veilles']) . $addWhere, 
 			'', 
-			'`' . $this->aTables['veilles'] . '`.`crdate` DESC',
+			$order,
 			$limit
 		);
 	}
