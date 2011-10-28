@@ -17,6 +17,7 @@
 			<label index="voir_aussi_label">Voir aussi : </label>
 			<label index="actus_label">Actualités liées : </label>
 			<label index="more">En savoir plus</label>
+			<label index="back">Retour</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="veille_label">Veille(s) : </label>
@@ -29,6 +30,8 @@
 			<label index="url_label">Site internet : </label>
 			<label index="voir_aussi_label">Voir aussi : </label>
 			<label index="actus_label">Actualités liées : </label>
+			<label index="more">En savoir plus</label>
+			<label index="back">Retour</label>
 		</languageKey>
 	</data>
 </T3locallang>

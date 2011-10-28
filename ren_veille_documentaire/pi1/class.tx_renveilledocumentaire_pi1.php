@@ -57,7 +57,6 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 		$this->pi_USER_INT_obj = 1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it's a USER_INT object!
 				
 		$sContent='';
-			
 		if((isset($this->piVars['notice']))&&(($this->piVars['notice'])>0)&&(($this->conf['detailsnotice']=='')||(!isset($this->conf['detailsnotice'])))){
 			$sContent .= $this->renderNotice($this->piVars['notice']);
 		}
@@ -283,11 +282,12 @@ class tx_renveilledocumentaire_pi1 extends tx_renveilledocumentaire_common {
 	 */
 	function renderNotice($uid) {
 		$sContent = '';
-		
 		$aNotices = $this->getNotices($uid);
 		if (is_array($aNotices)){
 			foreach($aNotices as $iKey=>$aNotice){
 				$dataNotice = $this->getMarkersNotice($aNotice);
+				$dataNotice[0]['###BACK###'] = $this->pi_getLL('back');
+				$dataNotice[0]['###BACK_LINK###'] = $this->pi_linkTP_keepPIvars_url(array('veille' => $aNotice['veille']),0,1,$this->conf['detailsveille']);
 				$sContent.= $this->viewTemplate('###TEMPLATE_DETAIL###', $dataNotice[0], $dataNotice[1]);
 			}
 		}
