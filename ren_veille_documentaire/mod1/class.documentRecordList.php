@@ -658,3 +658,7 @@ class documentRecordList extends localRecordList
 				'</a>';
 	}
 }
+
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_veille_documentaire/mod1/class.documentRecordList.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ren_veille_documentaire/mod1/class.documentRecordList.php']);
+}
